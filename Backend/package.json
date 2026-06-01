@@ -2,11 +2,11 @@
   "name": "ardhnarishwar-backend",
   "version": "1.0.0",
   "description": "Backend API for Ardhnarishwar website",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
