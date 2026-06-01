@@ -1,0 +1,306 @@
+/* ==========================================================================
+   FORM PORTAL PRESET SYSTEM - PREMIUM HIGH-VISIBILITY CYBER DARK
+   ========================================================================== */
+:root {
+  --page-space-bg: #090d16;
+  --panel-slate-dark: #0f172a;
+  --card-glass-dark: rgba(30, 41, 59, 0.65);
+  --border-neon-blue: #3b82f6;
+  
+  --text-titanium-white: #ffffff;
+  --text-slate-bright: #cbd5e1;
+  --text-slate-muted: #64748b;
+  --text-cyan-neon: #38bdf8;
+
+  --neon-glow-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+  --panel-drop-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --motion-bezier: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* PAGE WRAPPER */
+.portal-page-wrapper {
+  min-height: 100vh;
+  background-color: var(--page-space-bg);
+  padding: 140px 20px 80px 20px; /* Enhanced top clearance for fixed navigation panels */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Structural Backdrop Glow Manager Fields */
+.portal-glow-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.portal-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.18;
+  animation: floatAmbientBlob 10s infinite alternate ease-in-out;
+}
+
+.blob-blue {
+  background: var(--border-neon-blue);
+  width: 450px;
+  height: 450px;
+  top: -100px;
+  left: -80px;
+}
+
+.blob-purple {
+  background: #8b5cf6;
+  width: 400px;
+  height: 400px;
+  bottom: 10%;
+  right: -100px;
+  animation-delay: -4s;
+}
+
+/* CONTAINER ARCHITECTURE */
+.portal-container {
+  width: 100%;
+  max-width: 1180px;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* HEADER STYLE INTERFACE */
+.portal-header {
+  text-align: center;
+  max-width: 680px;
+  margin-bottom: 40px;
+  animation: portalFadeUpEntry 0.8s var(--motion-bezier);
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-cyan-neon);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 999px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.05);
+}
+
+.portal-header h1 {
+  font-size: 54px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  color: var(--text-titanium-white);
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.portal-header p {
+  font-size: 17.5px;
+  line-height: 1.65;
+  color: var(--text-slate-bright);
+  margin: 0;
+}
+
+/* PREMIUM INTERACTIVE NAVIGATION TAB TOGGLES */
+.tab-switch-navigation {
+  margin-bottom: 36px;
+  animation: portalFadeUpEntry 1s var(--motion-bezier);
+}
+
+.tabs-pill-container {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--panel-drop-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tab-toggle-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--text-slate-bright);
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s var(--motion-bezier);
+}
+
+.tab-toggle-btn:hover {
+  transform: translateY(-2px);
+  color: var(--text-titanium-white);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab-toggle-btn:active {
+  transform: translateY(0);
+}
+
+/* Activated Neon Portal Glow States */
+.active-tab {
+  background: linear-gradient(135deg, var(--border-neon-blue) 0%, #1e40af 100%) !important;
+  color: var(--text-titanium-white) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4), var(--neon-glow-shadow);
+}
+
+.active-glow-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background: var(--text-cyan-neon);
+  box-shadow: 0 0 10px var(--text-cyan-neon);
+  border-radius: 99px;
+}
+
+.tab-toggle-btn:hover .tab-icon {
+  transform: scale(1.1) rotate(3deg);
+}
+
+.tab-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s var(--motion-bezier);
+}
+
+/* PORTAL CORE CENTRAL MODULE DISPLAY CONTAINER */
+.portal-content-view {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  animation: portalSmoothRevealView 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Global Form Child Element Overrides (Forces ClientForm/CandidateForm into matching Dark UI) */
+.portal-content-view form,
+.form-glass-card {
+  width: 100%;
+  background: var(--card-glass-dark) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-radius: 28px !important;
+  padding: 45px !important;
+  box-shadow: var(--panel-drop-shadow) !important;
+  box-sizing: border-box;
+}
+
+/* Absolute High-Contrast Form Inputs and Select Boxes Configuration */
+.portal-content-view form label {
+  color: var(--text-slate-bright) !important;
+  font-weight: 600 !important;
+  font-size: 14.5px !important;
+}
+
+.portal-content-view form input,
+.portal-content-view form select,
+.portal-content-view form textarea {
+  background-color: rgba(9, 13, 22, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: var(--text-titanium-white) !important;
+  font-size: 15px !important;
+  border-radius: 10px !important;
+  transition: all 0.25s ease !important;
+}
+
+.portal-content-view form input:focus,
+.portal-content-view form select:focus,
+.portal-content-view form textarea:focus {
+  border-color: var(--border-neon-blue) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2) !important;
+  background-color: rgba(9, 13, 22, 0.9) !important;
+}
+
+/* DYNAMIC TIME INTERPOLATION ENGINE KEYFRAMES */
+@keyframes portalSmoothRevealView {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes portalFadeUpEntry {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatAmbientBlob {
+  0% { transform: translateY(0px) translateX(0px) scale(1); }
+  50% { transform: translateY(35px) translateX(25px) scale(1.06); }
+  100% { transform: translateY(0px) translateX(0px) scale(1); }
+}
+
+/* RESPONSIVE LAYOUT CONSTRAINTS OVERRIDES */
+@media (max-width: 768px) {
+  .portal-page-wrapper {
+    padding: 100px 14px 60px 14px;
+  }
+
+  .portal-header h1 {
+    font-size: 38px;
+    letter-spacing: -1px;
+  }
+
+  .portal-header p {
+    font-size: 15px;
+  }
+
+  .tabs-pill-container {
+    width: 100%;
+    flex-direction: column;
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .tab-toggle-btn {
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+  }
+
+  .portal-content-view form,
+  .form-glass-card {
+    padding: 24px !important;
+    border-radius: 20px !important;
+  }
+}

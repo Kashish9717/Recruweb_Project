@@ -1,0 +1,1077 @@
+import { useState } from 'react';
+import ScrollIndicator from '../components/ScrollIndicator';
+import { Link } from 'react-router-dom';
+
+const CVMaker = () => {
+  const [step, setStep] = useState(1);
+  const [cvData, setCvData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    location: '',
+    linkedin: '',
+    portfolio: '',
+    summary: '',
+    experience: [{
+      jobTitle: '',
+      company: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      responsibilities: ''
+    }],
+    education: [{
+      degree: '',
+      institution: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      grade: ''
+    }],
+    skills: '',
+    certifications: '',
+    languages: '',
+    projects: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setCvData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleArrayChange = (arrayName, index, field, value) => {
+    setCvData(prev => ({
+      ...prev,
+      [arrayName]: prev[arrayName].map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
+    }));
+  };
+
+  const addExperience = () => {
+    setCvData(prev => ({
+      ...prev,
+      experience: [...prev.experience, {
+        jobTitle: '',
+        company: '',
+        location: '',
+        startDate: '',
+        endDate: '',
+        current: false,
+        responsibilities: ''
+      }]
+    }));
+  };
+
+  const removeExperience = (index) => {
+    setCvData(prev => ({
+      ...prev,
+      experience: prev.experience.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addEducation = () => {
+    setCvData(prev => ({
+      ...prev,
+      education: [...prev.education, {
+        degree: '',
+        institution: '',
+        location: '',
+        startDate: '',
+        endDate: '',
+        grade: ''
+      }]
+    }));
+  };
+
+  const removeEducation = (index) => {
+    setCvData(prev => ({
+      ...prev,
+      education: prev.education.filter((_, i) => i !== index)
+    }));
+  };
+
+  const generateCV = () => {
+    if (!cvData.fullName || !cvData.email) {
+      alert('Please fill in your name and email');
+      return;
+    }
+    setStep(3);
+  };
+
+  const downloadCV = () => {
+    const cvContent = `
+╔══════════════════════════════════════════════════════════════╗
+║                        CURRICULUM VITAE                      ║
+╚══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+PERSONAL INFORMATION
+═══════════════════════════════════════════════════════════════
+
+Name:        ${cvData.fullName}
+Email:       ${cvData.email}
+Phone:       ${cvData.phone}
+Location:    ${cvData.location}
+LinkedIn:    ${cvData.linkedin || 'N/A'}
+Portfolio:   ${cvData.portfolio || 'N/A'}
+
+═══════════════════════════════════════════════════════════════
+PROFESSIONAL SUMMARY
+═══════════════════════════════════════════════════════════════
+
+${cvData.summary || 'Dynamic professional with proven skills and experience.'}
+
+═══════════════════════════════════════════════════════════════
+WORK EXPERIENCE
+═══════════════════════════════════════════════════════════════
+${cvData.experience.map((exp, idx) => `
+[${idx + 1}] ${exp.jobTitle || 'Position Title'}
+    Company:      ${exp.company || 'Company Name'}
+    Location:     ${exp.location || 'Location'}
+    Duration:     ${exp.startDate || 'Start'} - ${exp.current ? 'Present' : exp.endDate || 'End'}
+    
+    Responsibilities:
+    ${exp.responsibilities || '• Key responsibilities and achievements'}
+`).join('\n')}
+
+═══════════════════════════════════════════════════════════════
+EDUCATION
+═══════════════════════════════════════════════════════════════
+${cvData.education.map((edu, idx) => `
+[${idx + 1}] ${edu.degree || 'Degree'}
+    Institution:  ${edu.institution || 'Institution Name'}
+    Location:     ${edu.location || 'Location'}
+    Duration:     ${edu.startDate || 'Start'} - ${edu.endDate || 'End'}
+    Grade:        ${edu.grade || 'Grade/CGPA'}
+`).join('\n')}
+
+═══════════════════════════════════════════════════════════════
+SKILLS
+═══════════════════════════════════════════════════════════════
+
+${cvData.skills || '• Communication Skills\n• Team Management\n• Problem Solving\n• Technical Skills'}
+
+═══════════════════════════════════════════════════════════════
+CERTIFICATIONS
+═══════════════════════════════════════════════════════════════
+
+${cvData.certifications || '• Professional Certifications (if any)'}
+
+═══════════════════════════════════════════════════════════════
+PROJECTS
+═══════════════════════════════════════════════════════════════
+
+${cvData.projects || '• Project Details (optional)'}
+
+═══════════════════════════════════════════════════════════════
+LANGUAGES
+═══════════════════════════════════════════════════════════════
+
+${cvData.languages || '• English\n• Hindi'}
+
+═══════════════════════════════════════════════════════════════
+
+Generated by Recruweb CV Maker
+Date: ${new Date().toLocaleDateString()}
+    `;
+
+    const blob = new Blob([cvContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${cvData.fullName.replace(/\s+/g, '_')}_CV.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyToClipboard = () => {
+    const cvContent = `CURRICULUM VITAE
+
+PERSONAL INFORMATION
+Name: ${cvData.fullName}
+Email: ${cvData.email}
+Phone: ${cvData.phone}
+Location: ${cvData.location}
+LinkedIn: ${cvData.linkedin || 'N/A'}
+Portfolio: ${cvData.portfolio || 'N/A'}
+
+PROFESSIONAL SUMMARY
+${cvData.summary || 'Dynamic professional with proven skills and experience.'}
+
+WORK EXPERIENCE
+${cvData.experience.map((exp, idx) => `${idx + 1}. ${exp.jobTitle || 'Position Title'} at ${exp.company || 'Company Name'} (${exp.startDate || 'Start'} - ${exp.current ? 'Present' : exp.endDate || 'End'})
+   ${exp.responsibilities || 'Key responsibilities'}`).join('\n\n')}
+
+EDUCATION
+${cvData.education.map((edu, idx) => `${idx + 1}. ${edu.degree || 'Degree'} from ${edu.institution || 'Institution'} (${edu.startDate || 'Start'} - ${edu.endDate || 'End'})`).join('\n')}
+
+SKILLS
+${cvData.skills || 'Communication, Team Management, Problem Solving'}
+
+CERTIFICATIONS
+${cvData.certifications || 'N/A'}
+
+LANGUAGES
+${cvData.languages || 'English, Hindi'}`;
+
+    navigator.clipboard.writeText(cvContent);
+    alert('CV copied to clipboard!');
+  };
+
+  const resetForm = () => {
+    setCvData({
+      fullName: '',
+      email: '',
+      phone: '',
+      location: '',
+      linkedin: '',
+      portfolio: '',
+      summary: '',
+      experience: [{
+        jobTitle: '',
+        company: '',
+        location: '',
+        startDate: '',
+        endDate: '',
+        current: false,
+        responsibilities: ''
+      }],
+      education: [{
+        degree: '',
+        institution: '',
+        location: '',
+        startDate: '',
+        endDate: '',
+        grade: ''
+      }],
+      skills: '',
+      certifications: '',
+      languages: '',
+      projects: ''
+    });
+    setStep(1);
+  };
+
+  return (
+    <>
+      <section className="hero" style={{ minHeight: '50vh', paddingTop: '140px' }}>
+        <div className="hero-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+        </div>
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              Free Tool
+            </span>
+            <h1 className="section-title" style={{ fontSize: '48px' }}>CV Maker</h1>
+            <p className="section-subtitle">
+              Create a professional resume in minutes. Our easy-to-use CV maker helps you build a standout resume.
+            </p>
+          </div>
+        </div>
+        <ScrollIndicator />
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className="cv-steps">
+            <div className={`cv-step ${step >= 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`}>
+              <div className="step-circle">1</div>
+              <span>Personal Info</span>
+            </div>
+            <div className="step-line"></div>
+            <div className={`cv-step ${step >= 2 ? 'active' : ''} ${step > 2 ? 'completed' : ''}`}>
+              <div className="step-circle">2</div>
+              <span>Experience</span>
+            </div>
+            <div className="step-line"></div>
+            <div className={`cv-step ${step >= 3 ? 'active' : ''}`}>
+              <div className="step-circle">3</div>
+              <span>Preview & Download</span>
+            </div>
+          </div>
+
+          {step === 1 && (
+            <div className="cv-form-section">
+              <div className="cv-form-card">
+                <h3>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Personal Information
+                </h3>
+                <p>Start with your basic contact details</p>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Full Name *</label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={cvData.fullName}
+                      onChange={handleChange}
+                      placeholder="e.g., Saurabh Kumar"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Email Address *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={cvData.email}
+                      onChange={handleChange}
+                      placeholder="your.email@example.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={cvData.phone}
+                      onChange={handleChange}
+                      placeholder="+91 XXXXX XXXXX"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={cvData.location}
+                      onChange={handleChange}
+                      placeholder="e.g., Noida, Uttar Pradesh"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>LinkedIn Profile</label>
+                    <input
+                      type="url"
+                      name="linkedin"
+                      value={cvData.linkedin}
+                      onChange={handleChange}
+                      placeholder="linkedin.com/in/yourprofile"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Portfolio / Website</label>
+                    <input
+                      type="url"
+                      name="portfolio"
+                      value={cvData.portfolio}
+                      onChange={handleChange}
+                      placeholder="yourwebsite.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Professional Summary</label>
+                  <textarea
+                    name="summary"
+                    value={cvData.summary}
+                    onChange={handleChange}
+                    placeholder="Write a brief summary of your professional background, key skills, and career objectives..."
+                    rows="4"
+                  />
+                </div>
+
+                <div className="step-actions">
+                  <button 
+                    className="btn btn-primary btn-lg" 
+                    onClick={() => cvData.fullName && cvData.email ? setStep(2) : alert('Please fill name and email')}
+                  >
+                    Continue to Experience
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div className="cv-tips-card">
+                <h3>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                  </svg>
+                  Tips for Your Summary
+                </h3>
+                <ul>
+                  <li>Keep it concise - 2-4 sentences</li>
+                  <li>Highlight your key strengths</li>
+                  <li>Mention years of experience</li>
+                  <li>Include relevant achievements</li>
+                  <li>Mention your career goals</li>
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="cv-form-section">
+              <div className="cv-form-card">
+                <h3>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                  </svg>
+                  Work Experience
+                </h3>
+                <p>Add your relevant work experience (most recent first)</p>
+
+                {cvData.experience.map((exp, index) => (
+                  <div key={index} className="experience-entry">
+                    <div className="entry-header">
+                      <h4>Experience {index + 1}</h4>
+                      {index > 0 && (
+                        <button className="remove-btn" onClick={() => removeExperience(index)}>
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Job Title</label>
+                        <input
+                          type="text"
+                          value={exp.jobTitle}
+                          onChange={(e) => handleArrayChange('experience', index, 'jobTitle', e.target.value)}
+                          placeholder="e.g., Software Developer"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Company Name</label>
+                        <input
+                          type="text"
+                          value={exp.company}
+                          onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)}
+                          placeholder="e.g., Tech Corp India"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Location</label>
+                        <input
+                          type="text"
+                          value={exp.location}
+                          onChange={(e) => handleArrayChange('experience', index, 'location', e.target.value)}
+                          placeholder="e.g., Noida"
+                        />
+                      </div>
+                      <div className="form-group checkbox-group">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={exp.current}
+                            onChange={(e) => handleArrayChange('experience', index, 'current', e.target.checked)}
+                          />
+                          Currently Working Here
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Start Date</label>
+                        <input
+                          type="month"
+                          value={exp.startDate}
+                          onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>End Date</label>
+                        <input
+                          type="month"
+                          value={exp.endDate}
+                          onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)}
+                          disabled={exp.current}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Key Responsibilities & Achievements</label>
+                      <textarea
+                        value={exp.responsibilities}
+                        onChange={(e) => handleArrayChange('experience', index, 'responsibilities', e.target.value)}
+                        placeholder="• Led team of 5 developers&#10;• Improved system performance by 40%&#10;• Mentored junior team members"
+                        rows="4"
+                      />
+                    </div>
+                  </div>
+                ))}
+
+                <button className="btn btn-secondary" onClick={addExperience}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Add Another Experience
+                </button>
+
+                <h3 style={{ marginTop: '40px' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                  Education
+                </h3>
+
+                {cvData.education.map((edu, index) => (
+                  <div key={index} className="experience-entry">
+                    <div className="entry-header">
+                      <h4>Education {index + 1}</h4>
+                      {index > 0 && (
+                        <button className="remove-btn" onClick={() => removeEducation(index)}>
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Degree / Certificate</label>
+                        <input
+                          type="text"
+                          value={edu.degree}
+                          onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)}
+                          placeholder="e.g., B.Tech in Computer Science"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Institution</label>
+                        <input
+                          type="text"
+                          value={edu.institution}
+                          onChange={(e) => handleArrayChange('education', index, 'institution', e.target.value)}
+                          placeholder="e.g., ABC University"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Location</label>
+                        <input
+                          type="text"
+                          value={edu.location}
+                          onChange={(e) => handleArrayChange('education', index, 'location', e.target.value)}
+                          placeholder="e.g., Delhi"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Grade / CGPA</label>
+                        <input
+                          type="text"
+                          value={edu.grade}
+                          onChange={(e) => handleArrayChange('education', index, 'grade', e.target.value)}
+                          placeholder="e.g., 8.5 CGPA"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Start Year</label>
+                        <input
+                          type="month"
+                          value={edu.startDate}
+                          onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>End Year</label>
+                        <input
+                          type="month"
+                          value={edu.endDate}
+                          onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <button className="btn btn-secondary" onClick={addEducation}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Add Another Education
+                </button>
+
+                <h3 style={{ marginTop: '40px' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  Additional Information
+                </h3>
+
+                <div className="form-group">
+                  <label>Key Skills (comma-separated)</label>
+                  <textarea
+                    name="skills"
+                    value={cvData.skills}
+                    onChange={handleChange}
+                    placeholder="e.g., JavaScript, React, Node.js, Python, SQL, Git, AWS"
+                    rows="2"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Certifications</label>
+                  <textarea
+                    name="certifications"
+                    value={cvData.certifications}
+                    onChange={handleChange}
+                    placeholder="e.g., AWS Certified Developer, Google Analytics Certified"
+                    rows="2"
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Languages</label>
+                    <input
+                      type="text"
+                      name="languages"
+                      value={cvData.languages}
+                      onChange={handleChange}
+                      placeholder="e.g., English, Hindi"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Projects (Optional)</label>
+                    <input
+                      type="text"
+                      name="projects"
+                      value={cvData.projects}
+                      onChange={handleChange}
+                      placeholder="Brief description of key projects"
+                    />
+                  </div>
+                </div>
+
+                <div className="step-actions">
+                  <button className="btn btn-outline" onClick={() => setStep(1)}>
+                    Back
+                  </button>
+                  <button className="btn btn-primary btn-lg" onClick={generateCV}>
+                    Generate CV
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="cv-preview-section">
+              <div className="cv-preview-header">
+                <div className="preview-info">
+                  <h2>Your CV is Ready!</h2>
+                  <p>Review your CV below and download or copy it</p>
+                </div>
+                <div className="preview-actions">
+                  <button className="btn btn-outline" onClick={copyToClipboard}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy to Clipboard
+                  </button>
+                  <button className="btn btn-primary" onClick={downloadCV}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download CV
+                  </button>
+                  <button className="btn btn-secondary" onClick={resetForm}>
+                    Create Another
+                  </button>
+                </div>
+              </div>
+
+              <div className="cv-preview-card">
+                <div className="cv-preview-content">
+                  <div className="cv-header-section">
+                    <h1>{cvData.fullName}</h1>
+                    <div className="cv-contact-row">
+                      <span>📧 {cvData.email}</span>
+                      <span>📱 {cvData.phone || 'N/A'}</span>
+                      <span>📍 {cvData.location || 'N/A'}</span>
+                      {cvData.linkedin && <span>🔗 {cvData.linkedin}</span>}
+                    </div>
+                  </div>
+
+                  {cvData.summary && (
+                    <div className="cv-section">
+                      <h2>Professional Summary</h2>
+                      <p>{cvData.summary}</p>
+                    </div>
+                  )}
+
+                  {cvData.experience.some(e => e.jobTitle || e.company) && (
+                    <div className="cv-section">
+                      <h2>Work Experience</h2>
+                      {cvData.experience.filter(e => e.jobTitle || e.company).map((exp, idx) => (
+                        <div key={idx} className="cv-experience-item">
+                          <div className="cv-item-header">
+                            <strong>{exp.jobTitle || 'Position'}</strong>
+                            <span className="cv-date">
+                              {exp.startDate || 'Start'} - {exp.current ? 'Present' : exp.endDate || 'End'}
+                            </span>
+                          </div>
+                          <div className="cv-item-sub">{exp.company || 'Company'} {exp.location ? `• ${exp.location}` : ''}</div>
+                          {exp.responsibilities && (
+                            <div className="cv-item-details">
+                              {exp.responsibilities.split('\n').map((line, i) => (
+                                <p key={i}>{line}</p>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {cvData.education.some(e => e.degree || e.institution) && (
+                    <div className="cv-section">
+                      <h2>Education</h2>
+                      {cvData.education.filter(e => e.degree || e.institution).map((edu, idx) => (
+                        <div key={idx} className="cv-education-item">
+                          <div className="cv-item-header">
+                            <strong>{edu.degree || 'Degree'}</strong>
+                            <span className="cv-date">{edu.startDate || 'Start'} - {edu.endDate || 'End'}</span>
+                          </div>
+                          <div className="cv-item-sub">
+                            {edu.institution || 'Institution'} {edu.grade ? `• Grade: ${edu.grade}` : ''}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {cvData.skills && (
+                    <div className="cv-section">
+                      <h2>Skills</h2>
+                      <div className="cv-skills-list">
+                        {cvData.skills.split(',').map((skill, idx) => (
+                          <span key={idx} className="cv-skill-tag">{skill.trim()}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {cvData.certifications && (
+                    <div className="cv-section">
+                      <h2>Certifications</h2>
+                      <p>{cvData.certifications}</p>
+                    </div>
+                  )}
+
+                  {cvData.languages && (
+                    <div className="cv-section">
+                      <h2>Languages</h2>
+                      <p>{cvData.languages}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="preview-cta">
+                <h3>Ready to Apply for Jobs?</h3>
+                <p>Use your new CV to apply for positions on Recruweb</p>
+                <Link to="/jobs" className="btn btn-primary btn-lg">
+                  Browse Jobs
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <style>{`
+        .cv-form-section {
+          display: grid;
+          grid-template-columns: 1fr 350px;
+          gap: 24px;
+        }
+
+        .cv-form-card {
+          background: white;
+          padding: 32px;
+          border-radius: 16px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .cv-form-card h3 {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: var(--primary);
+          margin-bottom: 8px;
+        }
+
+        .cv-form-card > p {
+          color: var(--text-secondary);
+          margin-bottom: 24px;
+        }
+
+        .experience-entry {
+          background: var(--bg-alt);
+          padding: 20px;
+          border-radius: 12px;
+          margin-bottom: 16px;
+        }
+
+        .entry-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+
+        .entry-header h4 {
+          color: var(--primary);
+          font-size: 15px;
+        }
+
+        .remove-btn {
+          background: #fee2e2;
+          color: #dc2626;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 13px;
+          cursor: pointer;
+        }
+
+        .checkbox-group {
+          display: flex;
+          align-items: center;
+        }
+
+        .checkbox-group label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          padding-top: 28px;
+        }
+
+        .cv-tips-card {
+          background: #fffbeb;
+          border: 1px solid #fcd34d;
+          padding: 24px;
+          border-radius: 12px;
+          height: fit-content;
+        }
+
+        .cv-tips-card h3 {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 16px;
+          color: #92400e;
+        }
+
+        .cv-tips-card ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .cv-tips-card li {
+          padding: 8px 0;
+          color: #78350f;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .cv-tips-card li::before {
+          content: '✓';
+          color: #f59e0b;
+          font-weight: bold;
+        }
+
+        .cv-preview-section {
+          max-width: 900px;
+          margin: 0 auto;
+        }
+
+        .cv-preview-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+          gap: 16px;
+        }
+
+        .preview-info h2 {
+          color: var(--primary);
+          margin-bottom: 4px;
+        }
+
+        .preview-actions {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .cv-preview-card {
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+          overflow: hidden;
+        }
+
+        .cv-preview-content {
+          padding: 40px;
+        }
+
+        .cv-header-section {
+          text-align: center;
+          padding-bottom: 24px;
+          border-bottom: 2px solid var(--primary);
+          margin-bottom: 24px;
+        }
+
+        .cv-header-section h1 {
+          font-size: 32px;
+          color: var(--primary);
+          margin-bottom: 12px;
+        }
+
+        .cv-contact-row {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 16px;
+          font-size: 14px;
+          color: var(--text-secondary);
+        }
+
+        .cv-section {
+          margin-bottom: 24px;
+        }
+
+        .cv-section h2 {
+          font-size: 18px;
+          color: var(--primary);
+          padding-bottom: 8px;
+          border-bottom: 1px solid #e2e8f0;
+          margin-bottom: 12px;
+        }
+
+        .cv-item-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 4px;
+        }
+
+        .cv-item-sub {
+          color: var(--text-secondary);
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+
+        .cv-item-details p {
+          font-size: 14px;
+          margin: 4px 0;
+          padding-left: 12px;
+        }
+
+        .cv-skills-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .cv-skill-tag {
+          background: var(--primary);
+          color: white;
+          padding: 6px 14px;
+          border-radius: 20px;
+          font-size: 13px;
+        }
+
+        .preview-cta {
+          text-align: center;
+          margin-top: 32px;
+          padding: 32px;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+          border-radius: 16px;
+          color: white;
+        }
+
+        .preview-cta h3 {
+          margin-bottom: 8px;
+        }
+
+        .preview-cta p {
+          margin-bottom: 20px;
+          opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+          .cv-form-section {
+            grid-template-columns: 1fr;
+          }
+
+          .cv-preview-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .preview-actions {
+            width: 100%;
+          }
+
+          .preview-actions button {
+            flex: 1;
+          }
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default CVMaker;

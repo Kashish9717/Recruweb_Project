@@ -1,0 +1,507 @@
+/* ==========================================================================
+   ADVANCED CRM CONTROLLER DESIGN FRAMEWORK - GLASSMORPHIC DARK SYSTEM
+   ========================================================================== */
+:root {
+  --crm-bg-glass: rgba(15, 23, 42, 0.4);
+  --crm-card-border: rgba(255, 255, 255, 0.07);
+  --crm-row-hover: rgba(59, 130, 246, 0.06);
+  --crm-input-dark: rgba(9, 13, 22, 0.5);
+  
+  --crm-neon-indigo: #6366f1;
+  --crm-neon-cyan: #38bdf8;
+  --crm-danger-crimson: #ef4444;
+  
+  --crm-text-primary: #ffffff;
+  --crm-text-slate: #cbd5e1;
+  --crm-text-muted: #64748b;
+  
+  --crm-transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   VIEWPORT STRUCTURES & SCROLLBACKS
+   ========================================================================== */
+.crm-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: transparent; /* Seamless absorption into the main platform layout */
+}
+
+.crm-dashboard-container * {
+  box-sizing: border-box;
+}
+
+.crm-main-viewport {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(24px, 4vw, 50px);
+}
+
+.crm-content-bounds {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY HEADER SYSTEM
+   ========================================================================== */
+.crm-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 38px;
+}
+
+.crm-kicker-text {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--crm-neon-indigo);
+  margin: 0 0 10px 0;
+  margin-top: 30px;
+}
+
+.crm-primary-title {
+  font-size: clamp(30px, 3.5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--crm-text-primary);
+  margin: 0 0 12px 0;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.crm-secondary-subtitle {
+  color: var(--crm-text-slate);
+  font-size: 15.5px;
+  max-width: 700px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Centralized Performance Counter Badge */
+.crm-metrics-badge {
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 24px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--crm-text-slate);
+  border: 1px solid var(--crm-card-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.crm-badge-counter {
+  color: var(--crm-neon-cyan);
+  font-weight: 900;
+  font-size: 20px;
+}
+
+/* ==========================================================================
+   CORE METRIC COMPONENT WRAPPER (GLASS SHEET)
+   ========================================================================== */
+.crm-glass-card {
+  background: var(--crm-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid var(--crm-card-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.crm-table-scroller {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* ==========================================================================
+   TABULAR ENGINES ARCHITECTURE
+   ========================================================================== */
+.crm-data-table {
+  width: 100%;
+  min-width: 1250px;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* Uniform rows gaps matrix */
+}
+
+.crm-data-table th {
+  text-align: left;
+  padding: 16px 20px;
+  color: var(--crm-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.04);
+}
+
+.crm-table-row {
+  background: rgba(17, 24, 39, 0.4);
+  transition: transform 0.2s var(--crm-transition-smooth), background 0.2s ease;
+}
+
+.crm-table-row:hover {
+  background: var(--crm-row-hover);
+  transform: scale(1.002) translateY(-1px);
+}
+
+.crm-data-table td {
+  padding: 16px 20px;
+  font-size: 14.5px;
+  color: var(--crm-text-slate);
+  vertical-align: middle;
+  border-top: 1px solid var(--crm-card-border);
+  border-bottom: 1px solid var(--crm-card-border);
+}
+
+/* Rounding first and last cells to finalize modular row look */
+.crm-data-table td:first-child {
+  border-left: 1px solid var(--crm-card-border);
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+}
+
+.crm-data-table td:last-child {
+  border-right: 1px solid var(--crm-card-border);
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+/* ==========================================================================
+   ROW ELEMENT MICROCOMPONENTS
+   ========================================================================== */
+.crm-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.crm-avatar-sphere {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--crm-neon-indigo) 0%, #a855f7 100%);
+  color: var(--crm-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 17px;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  flex-shrink: 0;
+}
+
+.crm-profile-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.crm-profile-name {
+  font-weight: 700;
+  color: var(--crm-text-primary);
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.crm-profile-email {
+  color: var(--crm-text-muted);
+  font-size: 12.5px;
+}
+
+.crm-weight-bold {
+  font-weight: 600;
+  color: var(--crm-text-primary);
+}
+
+.crm-cyan-highlight {
+  color: var(--crm-neon-cyan);
+}
+
+.crm-text-right {
+  text-align: right !important;
+}
+
+/* Dynamic Skills Arrays */
+.crm-skills-matrix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 280px;
+}
+
+.crm-skill-pill {
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+/* Action Links (Resumes) */
+.crm-action-link-btn {
+  color: var(--crm-neon-cyan);
+  font-weight: 700;
+  text-decoration: none;
+  background: rgba(56, 189, 248, 0.08);
+  padding: 8px 14px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  transition: all 0.2s ease;
+}
+
+.crm-action-link-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: var(--crm-neon-cyan);
+  transform: translateY(-1px);
+}
+
+.crm-fallback-text {
+  color: var(--crm-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   SEMANTIC BADGES (CUSTOM SPEC PROPERTIES)
+   ========================================================================== */
+.crm-status-indicator {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Status Matrix Rules via Data Selectors */
+.crm-status-indicator[data-status="hired"] {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.crm-status-indicator[data-status="pending"] {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.crm-status-indicator[data-status="rejected"] {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.crm-status-indicator[data-status="new"] {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--crm-neon-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+/* ==========================================================================
+   STANDALONE DELETION CTA CONTROL
+   ========================================================================== */
+.crm-row-delete-btn {
+  border: none;
+  background: rgba(239, 68, 68, 0.08);
+  color: #f87171;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.crm-row-delete-btn:hover:not(:disabled) {
+  background: var(--crm-danger-crimson);
+  color: var(--crm-text-primary);
+  border-color: var(--crm-danger-crimson);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ==========================================================================
+   GLOBAL VIEW LABELS, LOADERS & ASYNC ANIMATIONS
+   ========================================================================== */
+.crm-loading-wrapper {
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.crm-radial-loader {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.05);
+  border-top-color: var(--crm-neon-indigo);
+  border-radius: 50%;
+  animation: crmSpin 0.8s linear infinite;
+}
+
+.crm-micro-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: crmSpin 0.5s linear infinite;
+}
+
+.crm-loading-text {
+  color: var(--crm-text-muted);
+  font-weight: 600;
+  font-size: 14.5px;
+}
+
+.crm-empty-state-card {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.crm-empty-icon {
+  font-size: 50px;
+  margin-bottom: 14px;
+  opacity: 0.5;
+}
+
+.crm-empty-state-card h4 {
+  font-size: 18px;
+  color: var(--crm-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.crm-empty-state-card p {
+  font-size: 14px;
+  color: var(--crm-text-muted);
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+@keyframes crmSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   PORTAL CANVAS OVERLAY MODAL (UI FIX FOR CELL-COLLAPSE)
+   ========================================================================== */
+.crm-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(4, 7, 12, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Higher than dashboard scaffolding anchors */
+  padding: 20px;
+}
+
+.crm-modal-window {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 36px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.crm-modal-graphic {
+  font-size: 44px;
+  margin-bottom: 16px;
+}
+
+.crm-modal-window h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--crm-text-primary);
+  margin: 0 0 12px 0;
+}
+
+.crm-modal-window p {
+  font-size: 14px;
+  color: var(--crm-text-slate);
+  margin: 0 0 28px 0;
+  line-height: 1.6;
+}
+
+.crm-modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.crm-modal-cancel {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--crm-text-slate);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.crm-modal-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.crm-modal-confirm {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: var(--crm-danger-crimson);
+  color: var(--crm-text-primary);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+  transition: opacity 0.2s ease;
+}
+
+.crm-modal-confirm:hover {
+  opacity: 0.9;
+}
+
+.crm-modal-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
