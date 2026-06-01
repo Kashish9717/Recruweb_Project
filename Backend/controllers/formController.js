@@ -37,8 +37,7 @@ export const createCandidateForm = async (req, res) => {
       expectedSalary,
       preferredLocation,
       currentCompany,
-    resumeUrl: req.file ? `/uploads/resumes/${req.file.filename}` : null
-    });
+   resumeUrl: req.file ? req.file.path : null    });
 
     res.status(201).json({
       success: true,

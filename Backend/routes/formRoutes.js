@@ -3,6 +3,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
 import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js";
 
 import {
   createCandidateForm,
@@ -33,17 +35,14 @@ const uploadDir = path.join(__dirname, "../uploads/resumes");
 
 fs.mkdirSync(uploadDir, { recursive: true });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "recruweb/resumes",
+    allowed_formats: ["pdf", "doc", "docx"],
+    resource_type: "raw",
   },
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `resume-${timestamp}${ext}`);
-  }
 });
-
 const fileFilter = (req, file, cb) => {
   const allowed = [".pdf", ".doc", ".docx"];
   const ext = path.extname(file.originalname).toLowerCase();
