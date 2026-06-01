@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import logo from '../../images/AiHrChatbot.jpg'; 
+import logo from '../../images/AiHRChatbot.jpg'; 
 
 const FAQ_RESPONSES = {
   hello: ["Hello! Welcome to Recruweb. How can I assist you today?", "Hi there! I'm here to help with any questions about our HR solutions."],
