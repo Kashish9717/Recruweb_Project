@@ -248,8 +248,8 @@ const Navbar = () => {
           </ul>
 
           <div className="nav-actions">
-            <Link to="/form" className="nav-secondary-btn">Register</Link>
-            <Link to="/admin" className="nav-admin-btn">Admin</Link>
+            <Link to="/form" className="nav-secondary-btn">RRRRR</Link>
+            <Link to="/admin" className="nav-admin-btn">aaaa</Link>
           </div>
 
           <button
@@ -272,7 +272,7 @@ const Navbar = () => {
             {link.name}
           </Link>
         ))}
-        <Link to="/form" className="mobile-link" onClick={closeMenu}>REGISTER HERE</Link>
+        <Link to="/form" className="mobile-link" onClick={closeMenu}>REGISTER </Link>
         <Link to="/admin" className="mobile-link" onClick={closeMenu}>Admin</Link>
       </div>
 
