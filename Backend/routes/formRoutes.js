@@ -34,7 +34,7 @@ const storage = new CloudinaryStorage({
       folder: "recruweb/resumes",
 
       // IMPORTANT for PDFs
-      resource_type: "raw",
+      resource_type: "auto",
 
       // unique file name
       public_id: `resume-${Date.now()}-${file.originalname.split(".")[0]}`,

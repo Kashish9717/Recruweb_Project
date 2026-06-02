@@ -42,7 +42,7 @@ export const createCandidateForm = async (req, res) => {
       currentCompany,
 
       // ✅ FINAL FIX (ONLY THIS)
-      resumeUrl: req.file ? req.file.path : null,
+     resumeUrl: req.file?.secure_url || req.file?.path
     });
 
     return res.status(201).json({
