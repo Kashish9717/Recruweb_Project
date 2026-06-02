@@ -248,8 +248,8 @@ const Navbar = () => {
           </ul>
 
           <div className="nav-actions">
-            <Link to="/form" className="nav-secondary-btn">RRRRR</Link>
-            <Link to="/admin" className="nav-admin-btn">aaaa</Link>
+            <Link to="/form" className="nav-secondary-btn">Register Here</Link>
+            <Link to="/admin" className="nav-admin-btn">Admin</Link>
           </div>
 
           <button
