@@ -170,17 +170,17 @@ const Candidates = () => {
 
                           <td>
                             {candidate.resumeUrl ? (
-                              <a
-                                href={`http://localhost:5001/${candidate.resumeUrl.replace(/^\/+/, "")}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="crm-action-link-btn"
-                              >
-                                📄 View File
-                              </a>
-                            ) : (
-                              <span className="crm-fallback-text">N/A</span>
-                            )}
+                            <a
+                              href={candidate.resumeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="crm-action-link-btn"
+                            >
+                              📄 View Resume
+                            </a>
+                          ) : (
+                            <span className="crm-fallback-text">N/A</span>
+                          )}
                           </td>
 
                           <td>

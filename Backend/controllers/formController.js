@@ -1,15 +1,16 @@
-import Candidate from '../models/Candidate.js';
-import ClientRequirement from '../models/ClientRequirement.js';
+import Candidate from "../models/Candidate.js";
+import ClientRequirement from "../models/ClientRequirement.js";
 
-const normalizePath = (filePath) => filePath ? filePath.replace(/\\/g, '/') : filePath;
-
+/* ---------------- ERROR HANDLER ---------------- */
 const respondError = (res, message, error, statusCode = 500) => {
   return res.status(statusCode).json({
     success: false,
     message,
-    error: error?.message || error
+    error: error?.message || error,
   });
 };
+
+/* ---------------- CANDIDATE ---------------- */
 
 export const createCandidateForm = async (req, res) => {
   try {
@@ -23,8 +24,10 @@ export const createCandidateForm = async (req, res) => {
       skills,
       expectedSalary,
       preferredLocation,
-      currentCompany
+      currentCompany,
     } = req.body;
+
+    console.log("📁 FILE RECEIVED:", req.file);
 
     const candidate = await Candidate.create({
       fullName,
@@ -37,46 +40,37 @@ export const createCandidateForm = async (req, res) => {
       expectedSalary,
       preferredLocation,
       currentCompany,
-   resumeUrl: req.file ? req.file.path : null    });
 
-    res.status(201).json({
+      // ✅ FINAL FIX (ONLY THIS)
+      resumeUrl: req.file ? req.file.path : null,
+    });
+
+    return res.status(201).json({
       success: true,
-      message: 'Candidate form submitted successfully.',
-      data: candidate
+      message: "Candidate form submitted successfully.",
+      data: candidate,
     });
   } catch (error) {
-    respondError(res, 'Failed to submit candidate form. Please try again.', error);
+    return respondError(res, "Failed to submit candidate form.", error);
   }
 };
 
+/* ---------------- GET ALL CANDIDATES ---------------- */
 export const getCandidates = async (req, res) => {
   try {
     const candidates = await Candidate.find().sort({ createdAt: -1 });
-    res.status(200).json({
+
+    return res.status(200).json({
       success: true,
       count: candidates.length,
-      data: candidates
+      data: candidates,
     });
   } catch (error) {
-    respondError(res, 'Failed to fetch candidate forms.', error);
+    return respondError(res, "Failed to fetch candidates.", error);
   }
 };
 
-  export const deleteClientRequirement = async (req, res) => {
-  try {
-
-    await ClientRequirement.findByIdAndDelete(req.params.id);
-
-    res.status(200).json({
-      success: true,
-      message: 'Client requirement deleted successfully'
-    });
-
-  } catch (error) {
-    respondError(res, 'Failed to delete client requirement.', error);
-  }
-};
-
+/* ---------------- GET SINGLE CANDIDATE ---------------- */
 export const getCandidate = async (req, res) => {
   try {
     const candidate = await Candidate.findById(req.params.id);
@@ -84,18 +78,52 @@ export const getCandidate = async (req, res) => {
     if (!candidate) {
       return res.status(404).json({
         success: false,
-        message: 'Candidate form not found.'
+        message: "Candidate not found",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      data: candidate
+      data: candidate,
     });
   } catch (error) {
-    respondError(res, 'Failed to fetch candidate form.', error);
+    return respondError(res, "Failed to fetch candidate.", error);
   }
 };
+
+/* ---------------- UPDATE ---------------- */
+export const updateCandidate = async (req, res) => {
+  try {
+    const candidate = await Candidate.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: candidate,
+    });
+  } catch (error) {
+    return respondError(res, "Failed to update candidate.", error);
+  }
+};
+
+/* ---------------- DELETE ---------------- */
+export const deleteCandidate = async (req, res) => {
+  try {
+    await Candidate.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Candidate deleted successfully",
+    });
+  } catch (error) {
+    return respondError(res, "Failed to delete candidate.", error);
+  }
+};
+
+/* ---------------- CLIENT ---------------- */
 
 export const createClientForm = async (req, res) => {
   try {
@@ -112,7 +140,7 @@ export const createClientForm = async (req, res) => {
       employmentType,
       skillsRequired,
       joiningTimeline,
-      jobDescription
+      jobDescription,
     } = req.body;
 
     const clientRequirement = await ClientRequirement.create({
@@ -128,103 +156,83 @@ export const createClientForm = async (req, res) => {
       employmentType,
       skillsRequired,
       joiningTimeline,
-      jobDescription
+      jobDescription,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: 'Client requirement submitted successfully.',
-      data: clientRequirement
+      message: "Client requirement submitted successfully.",
+      data: clientRequirement,
     });
   } catch (error) {
-    respondError(res, 'Failed to submit client requirement. Please try again.', error);
+    return respondError(res, "Failed to submit client requirement.", error);
   }
 };
 
+/* ---------------- CLIENT GET ALL ---------------- */
 export const getClientRequirements = async (req, res) => {
   try {
-    const requirements = await ClientRequirement.find().sort({ createdAt: -1 });
-    res.status(200).json({
+    const data = await ClientRequirement.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
       success: true,
-      count: requirements.length,
-      data: requirements
+      count: data.length,
+      data,
     });
   } catch (error) {
-    respondError(res, 'Failed to fetch client requirements.', error);
+    return respondError(res, "Failed to fetch clients.", error);
   }
 };
 
+/* ---------------- CLIENT GET ONE ---------------- */
 export const getClientRequirement = async (req, res) => {
   try {
-    const requirement = await ClientRequirement.findById(req.params.id);
+    const data = await ClientRequirement.findById(req.params.id);
 
-    if (!requirement) {
+    if (!data) {
       return res.status(404).json({
         success: false,
-        message: 'Client requirement not found.'
+        message: "Client not found",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      data: requirement
+      data,
     });
   } catch (error) {
-    respondError(res, 'Failed to fetch client requirement.', error);
+    return respondError(res, "Failed to fetch client.", error);
   }
 };
 
-
-export const updateCandidate = async (req, res) => {
-  try {
-
-    const candidate = await Candidate.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      data: candidate
-    });
-
-  } catch (error) {
-    respondError(res, 'Failed to update candidate.', error);
-  }
-};
-
-export const deleteCandidate = async (req, res) => {
-  try {
-
-    await Candidate.findByIdAndDelete(req.params.id);
-
-    res.status(200).json({
-      success: true,
-      message: 'Candidate deleted successfully'
-    });
-
-  } catch (error) {
-    respondError(res, 'Failed to delete candidate.', error);
-  }
-};
-
+/* ---------------- CLIENT UPDATE ---------------- */
 export const updateClientRequirement = async (req, res) => {
   try {
-
-    const requirement = await ClientRequirement.findByIdAndUpdate(
+    const data = await ClientRequirement.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      data: requirement
+      data,
     });
-
   } catch (error) {
-    respondError(res, 'Failed to update client requirement.', error);
+    return respondError(res, "Failed to update client.", error);
   }
 };
 
+/* ---------------- CLIENT DELETE ---------------- */
+export const deleteClientRequirement = async (req, res) => {
+  try {
+    await ClientRequirement.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Client deleted successfully",
+    });
+  } catch (error) {
+    return respondError(res, "Failed to delete client.", error);
+  }
+};

@@ -2,17 +2,14 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    const uri = process.env.MONGO_URI;
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      family: 4, // 🔥 CRITICAL FIX FOR SRV DNS ISSUE
+    });
 
-    if (!uri) {
-      throw new Error("MONGO_URI missing in .env file");
-    }
-
-    await mongoose.connect(uri);
-
-    console.log("MongoDB Connected");
+    console.log("✅ MongoDB connected");
   } catch (error) {
-    console.error("DB Error:", error.message);
+    console.error("❌ MongoDB connection failed:", error.message);
     process.exit(1);
   }
 };
