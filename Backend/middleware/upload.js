@@ -5,23 +5,15 @@ import cloudinary from "../config/cloudinary.js";
 
 // ---------------- CLOUDINARY STORAGE ----------------
 const storage = new CloudinaryStorage({
-  cloudinary,
+  cloudinary: cloudinary,
+  params: {
+    folder: "recruweb/resumes",
 
-  params: async (req, file) => {
-    const ext = path.extname(file.originalname).toLowerCase();
+    resource_type: "auto", // 🔥 FIX (MOST IMPORTANT)
+     access_mode: "public", // 🔥 VERY IMPORTANT FIX
 
-    return {
-      folder: "recruweb/resumes",
-
-      // IMPORTANT for pdf/doc uploads
-      resource_type: "auto",
-
-      public_id: `resume-${Date.now()}-${file.originalname
-        .split(".")[0]
-        .replace(/\s/g, "-")}`,
-
-      allowed_formats: ["pdf", "doc", "docx"],
-    };
+    public_id: (req, file) =>
+      `resume-${Date.now()}-${file.originalname.split(".")[0]}`,
   },
 });
 

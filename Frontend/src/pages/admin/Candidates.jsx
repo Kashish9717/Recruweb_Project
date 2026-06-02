@@ -170,20 +170,12 @@ const Candidates = () => {
 
                           <td>
                             {candidate.resumeUrl ? (
-                           <a
-                      href={candidate.resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open(candidate.resumeUrl, "_blank");
-                      }}
-                    >
-                      📄 View Resume
-                    </a>
-                          ) : (
-                            <span className="crm-fallback-text">N/A</span>
-                          )}
+                          <a href={candidate.resumeUrl} download>
+  📥 Download Resume
+</a>
+                        ) : (
+                          <span className="crm-fallback-text">N/A</span>
+                        )}
                           </td>
 
                           <td>

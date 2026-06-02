@@ -272,7 +272,7 @@ const Navbar = () => {
             {link.name}
           </Link>
         ))}
-        <Link to="/form" className="mobile-link" onClick={closeMenu}>Register</Link>
+        <Link to="/form" className="mobile-link" onClick={closeMenu}>LALALa</Link>
         <Link to="/admin" className="mobile-link" onClick={closeMenu}>Admin</Link>
       </div>
 
