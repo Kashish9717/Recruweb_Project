@@ -272,8 +272,8 @@ const Navbar = () => {
             {link.name}
           </Link>
         ))}
-        <Link to="/form" className="mobile-link" onClick={closeMenu}>LALALa</Link>
-        <Link to="/admin" className="mobile-link" onClick={closeMenu}>Ad</Link>
+        <Link to="/form" className="mobile-link" onClick={closeMenu}>REGISTER HERE</Link>
+        <Link to="/admin" className="mobile-link" onClick={closeMenu}>Admin</Link>
       </div>
 
       {/* STYLES */}
